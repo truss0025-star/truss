@@ -1,0 +1,82 @@
+import type { Timeline } from '../schema/timeline'
+
+// A clean run — zero violations. A legitimate pass, not an error.
+export const noViolationsRun: Timeline = {
+  meta: {
+    url: 'https://gov.uk',
+    startedAt: '2026-08-11T10:00:00Z',
+    durationMs: 8000,
+    viewportWidth: 1280,
+    viewportHeight: 800,
+    screenReaderNote:
+      'Simulated VoiceOver session. Every element encountered was correctly labelled.',
+  },
+  events: [
+    { type: 'focus', t: 0,   selector: 'a.skip-link',              bbox: { x: 0,   y: 0,   width: 160, height: 40 } },
+    { type: 'announcement', t: 100, text: 'Skip to main content, link' },
+    { type: 'keypress', t: 200, key: 'Tab' },
+    { type: 'focus', t: 340, selector: 'header a[href="/"]',        bbox: { x: 24,  y: 16,  width: 120, height: 48 } },
+    { type: 'announcement', t: 440, text: 'GOV.UK, link' },
+    { type: 'keypress', t: 560, key: 'Tab' },
+    { type: 'focus', t: 700, selector: 'nav a:nth-child(1)',        bbox: { x: 24,  y: 80,  width: 160, height: 40 } },
+    { type: 'announcement', t: 800, text: 'Benefits, link' },
+    { type: 'keypress', t: 920, key: 'Tab' },
+    { type: 'focus', t: 1060, selector: 'nav a:nth-child(2)',       bbox: { x: 24,  y: 128, width: 180, height: 40 } },
+    { type: 'announcement', t: 1160, text: 'Births, deaths, marriages, link' },
+    { type: 'keypress', t: 1280, key: 'Tab' },
+    { type: 'focus', t: 1420, selector: 'form#search input',       bbox: { x: 240, y: 260, width: 560, height: 52 } },
+    { type: 'announcement', t: 1520, text: 'Search GOV.UK, edit text' },
+    { type: 'keypress', t: 1640, key: 'Tab' },
+    { type: 'focus', t: 1780, selector: 'form#search button',      bbox: { x: 800, y: 260, width: 120, height: 52 } },
+    { type: 'announcement', t: 1880, text: 'Search, button' },
+    { type: 'keypress', t: 2000, key: 'Tab' },
+    { type: 'focus', t: 2140, selector: 'main h1',                 bbox: { x: 80,  y: 360, width: 640, height: 56 } },
+    { type: 'announcement', t: 2240, text: 'heading level 1 — Welcome to GOV.UK' },
+    { type: 'keypress', t: 2400, key: 'Tab' },
+    { type: 'focus', t: 2540, selector: 'footer nav a:first-child',bbox: { x: 24,  y: 700, width: 96,  height: 32 } },
+    { type: 'announcement', t: 2640, text: 'Help, link' },
+    { type: 'keypress', t: 2760, key: 'Tab' },
+  ],
+}
+
+// A run with task steps wired.
+export const taskRun: Timeline = {
+  meta: {
+    url: 'https://checkout.example.com',
+    startedAt: '2026-08-11T16:00:00Z',
+    durationMs: 14000,
+    viewportWidth: 1280,
+    viewportHeight: 800,
+    screenReaderNote: 'Simulated VoiceOver. Task: complete a checkout flow keyboard-only.',
+  },
+  events: [
+    { type: 'task-step', t: 0,    label: 'Navigate to checkout', status: 'pass' },
+    { type: 'focus', t: 100,  selector: 'a.skip-link',            bbox: { x: 0,   y: 0,   width: 160, height: 40 } },
+    { type: 'announcement', t: 200,  text: 'Skip to checkout form, link' },
+    { type: 'keypress', t: 320, key: 'Tab' },
+    { type: 'focus', t: 460,  selector: '#billing input[name="name"]', bbox: { x: 240, y: 200, width: 400, height: 44 } },
+    { type: 'announcement', t: 560,  text: 'Full name, edit text' },
+    { type: 'keypress', t: 680, key: 'Tab' },
+    { type: 'task-step', t: 750,  label: 'Fill billing name', status: 'pass' },
+    { type: 'focus', t: 820,  selector: '#billing input[name="card"]', bbox: { x: 240, y: 260, width: 400, height: 44 } },
+    { type: 'announcement', t: 920,  text: 'Card number, edit text' },
+    { type: 'keypress', t: 1040, key: 'Tab' },
+    {
+      type: 'violation', t: 1100,
+      selector: '#billing input[name="expiry"]',
+      bbox: { x: 240, y: 320, width: 160, height: 44 },
+      checkId: 'label',
+      severity: 'serious',
+      wcag: '1.3.1',
+      plainEnglish: 'Expiry date input has no visible label — only placeholder text, which disappears when typing.',
+      fix: 'Add a persistent <label> element. Placeholder text does not substitute for a label.',
+      provenance: 'rule',
+    },
+    { type: 'task-step', t: 1200, label: 'Fill card details', status: 'fail' },
+    { type: 'keypress', t: 1400, key: 'Tab' },
+    { type: 'focus', t: 1540, selector: 'button[type="submit"]', bbox: { x: 240, y: 500, width: 200, height: 52 } },
+    { type: 'announcement', t: 1640, text: 'Place order, button' },
+    { type: 'task-step', t: 1800, label: 'Submit order', status: 'skip' },
+    { type: 'keypress', t: 2000, key: 'Tab' },
+  ],
+}

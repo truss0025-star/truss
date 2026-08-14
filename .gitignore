@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+*-debug.log*
+
+# Editor / OS cruft
+.DS_Store
+.vite/
+vite.config.*.timestamp-*
+
+# Generated audit runs (timelines + captured frames) — keep the folder, not its output
+runs/*
+!runs/.gitkeep
+
+# Playwright
+/test-results/
+/playwright-report/

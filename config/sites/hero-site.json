@@ -1,0 +1,9 @@
+{
+  "site": "hero-site.example",
+  "task": "complete checkout",
+  "steps": [
+    { "goto": "/products/blue-jacket", "label": "Open product page" },
+    { "target": ".add-to-cart", "label": "Add to cart" },
+    { "target": ".checkout-button", "label": "Reach checkout" }
+  ]
+}
