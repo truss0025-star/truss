@@ -39,9 +39,12 @@ export async function runAudit(opts: RunAuditOptions): Promise<Timeline> {
     events.push(...walk.keypresses, ...walk.focuses, ...walk.announcements, ...walk.violations);
     t = walk.focuses.at(-1)?.t ?? t;
 
-    const reachability = await reachabilityDiff(session.page, walk.reachableSelectors);
+    const reachability = reachabilityDiff(walk.interactiveSelectors, walk.reachableSelectors);
     events.push(...reachability);
-    log(`keyboard engine: ${walk.reachableSelectors.length} reached, trap=${walk.trapDetected}, ${reachability.length} unreachable`);
+    log(
+      `keyboard engine: ${walk.reachableSelectors.length}/${walk.interactiveSelectors.length} reached, ` +
+        `trap=${walk.trapDetected}, ${reachability.length} unreachable`
+    );
 
     try {
       const announcementIndex = await buildAnnouncementIndex(session.page);
